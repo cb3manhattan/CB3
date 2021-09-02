@@ -64,4 +64,8 @@ mac_agenda = r'/Users/calvindechicago/Desktop/SLA_test.txt'
 test_try_except(mac_agenda)[3]
 
 
-test_try_except(mac_agenda)[2][2]
+test_try_except(mac_agenda)[3]
+
+
+
+
