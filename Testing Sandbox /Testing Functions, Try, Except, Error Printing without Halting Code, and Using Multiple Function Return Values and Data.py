@@ -59,6 +59,8 @@ def test_try_except(agenda_pull):
     
     return 0, 'a function can return numerous values and data', ['hello', 'why','a function can return numerous values and data'], agenda_df; 
 
+
+
 test_try_except(mac_agenda)[3]
 
 
