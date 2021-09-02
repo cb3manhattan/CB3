@@ -13,41 +13,40 @@
 #     name: python3
 # ---
 
-"""
-The purpose of this script is to automate SLA tasks. This includes creating folders for each month and establishment,
-creating emails and letters from templates, and more. 
-
-
-Process:
-1) Copy list of items from online agenda into text doc as shown below
-2) I will likely want to quickly remove certain text from this, such as section descriptions like 'New Liquor License Applications,' or other info that will not go into the final outputs like the description of the license type. 
-3) The most important thing will likely be keeping each entry to one line in the input file as I will likely use line breaks to parse each item. 
-4) If this doesn't work, another option might be the period (.) followed by blank spaces. 
-5) DBA format seems to be in parentheses after the name. 
-6) I will have to manually add lawyers names.
-7) Agenda number is the number in the list itself. 
-
-----------------------------------------------------------------------------
-1 - Open and read lines of text file
-    - https://www.geeksforgeeks.org/reading-writing-text-files-python/
-2 - Iterate through each line and build a dataframe / table from the relevant contents
-3 - Filter out rows that begin with numeric. These should be the agenda items. 
-4 - split at period and get first item, which is the numeric agenda item number. 
-5 - split again and get the business name
-6 - split again and get the address
-
----------------------------------------------------------------------------------
-
-TO DO
- - Create code to remove illegal characters from strings ('B'way' and apostrophes have been replaced)
- - Start scripting work to input values into template letters
- - Create output for excel, which can serve a number of functions:
-     - a place to input additional info like lawyers name
-     - track other SLA items
- - Create similar script that takes as an input an excel file instead of a text file. 
-
-
-"""
+# """
+# ## The purpose of this script is to automate SLA tasks. This includes creating folders for each month and establishment, creating emails and letters from templates, and more. 
+#
+#
+# ## Process
+# ##### 1) Copy list of items from online agenda into text doc as shown below
+# ##### 2) I will likely want to quickly remove certain text from this, such as section descriptions like 'New Liquor License Applications,' or other info that will not go into the final outputs like the description of the license type. 
+# ##### 3) The most important thing will likely be keeping each entry to one line in the input file as I will likely use line breaks to parse each item. 
+# ##### 4) If this doesn't work, another option might be the period (.) followed by blank spaces. 
+# ##### 5) DBA format seems to be in parentheses after the name. 
+# ##### 6) I will have to manually add lawyers names.
+# ##### 7) Agenda number is the number in the list itself. 
+#
+# ##### ----------------------------------------------------------------------------
+# ##### 1 - Open and read lines of text file
+# #####                - https://www.geeksforgeeks.org/reading-writing-text-files-python/
+# ##### 2 - Iterate through each line and build a dataframe / table from the relevant contents
+# ##### 3 - Filter out rows that begin with numeric. These should be the agenda items. 
+# ##### 4 - split at period and get first item, which is the numeric agenda item number. 
+# ##### 5 - split again and get the business name
+# ##### 6 - split again and get the address
+#
+# ##### ---------------------------------------------------------------------------------
+#
+# ## TO DO
+# ##### - Create code to remove illegal characters from strings ('B'way' and apostrophes have been replaced)
+# ##### - Start scripting work to input values into template letters
+# ##### - Create output for excel, which can serve a number of functions:
+# #####             - A place to input additional info like lawyers name
+# #####             - Track other SLA items
+# #####             - Create similar script that takes as an input an excel file instead of a text file. 
+#
+#
+# """
 
 import pandas as pd
 import datetime as dt
@@ -171,7 +170,7 @@ def make_sla_folders(agenda_pull):
         os.makedirs(fin_filepath)
         
     return agenda_df;
-    
+
 
 september_pull =  r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Automation Work\September_Agenda_Pull.txt"
 
@@ -198,29 +197,20 @@ MAKE SLA TRACKING SHEET
 
 agenda_df
 
+mac_agenda = r'/Users/calvindechicago/Desktop/SLA_test.txt'
+
+
+make_sla_folders(mac_agenda)
+
 """
-BELOW: TESTING TRY and EXCEPT. 
-    I want to learn how to use this feature in my code
-    I want to print the error but not halt the code. 
-    This will be designed to alert if directory already exists
-    
-    OTHER ITEMS to learn: Returning multiple items from function. 
+Mac Pull - This section is to aid development and testing on a mac. 
+
+This contains a path to an SLA pull on the mac for quick testing. 
 """
 
-
-def test_try_except():
-    desktop = os.path.expanduser("~/Desktop")
-    top_folder = 'Test_try_except'
-    filepath = os.path.join(desktop, top_folder)
-    try:
-        os.makedirs(filepath)
-    except Exception as e: 
-        print(e)
-        pass
-    return 0; 
+mac_agenda = r'/Users/calvindechicago/Desktop/SLA_test.txt'
 
 
-test_try_except()
+test_try_except(mac_agenda)[3]
 
-# +
-# USE THIS BRANCH
+test_try_except(mac_agenda)[2][2]

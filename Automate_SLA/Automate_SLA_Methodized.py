@@ -170,7 +170,7 @@ def make_sla_folders(agenda_pull):
         os.makedirs(fin_filepath)
         
     return agenda_df;
-    
+
 
 september_pull =  r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Automation Work\September_Agenda_Pull.txt"
 
