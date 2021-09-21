@@ -13,11 +13,11 @@
 #     name: python3
 # ---
 
-"""
-## BELOW: TESTING Socrata NY Open Data API. 
-####    Using request library to pull 311 data for Community Board
-
-"""
+# """
+# ## BELOW: TESTING Socrata NY Open Data API. 
+# ####    Using request library to pull 311 data for Community Board
+#
+# """
 
 import pandas as pd
 import geopandas as gpd
@@ -41,7 +41,25 @@ QUERY_SYMBOL = '?'
 COMMUNITY_BOARD = 'community_board'
 CB = "03 MANHATTAN"
 base_url = ENDPOINT + QUERY_SYMBOL + COMMUNITY_BOARD + '=' + CB
+
+# +
+# Create secondary query to test date function. 
+# Documentation here: https://dev.socrata.com/foundry/data.cityofnewyork.us/erm2-nwe9
+
+ENDPOINT = "https://data.cityofnewyork.us/resource/erm2-nwe9.geojson"
+QUERY_SYMBOL = '?'
+WHERE = "$where="
+date = "2021-09-01T00:00:00.000"
+date_operator = " > "
+date_query = f"created_date{date_operator}'{date}'"
+base_url = ENDPOINT + QUERY_SYMBOL + WHERE + date_query
 # -
+
+# Current Time in floating timestamp data type, which is what Socrata uses. 
+now = datetime.now()
+dt_2 = now.strftime('%Y-%m-%dT%H:%M:%S.%fZ')[:-4]
+
+print(dt_2)
 
 # See base url assembled from pieces above
 base_url
@@ -65,12 +83,6 @@ type(cb3_complaints_geo)
 
 cb3_complaints_geo.crs
 
-bounds = cb3_complaints_geo.total_bounds
-a = np.mean(bounds[0:3:2]).round(3)
-b = np.mean(bounds[1:4:2]).round(3)
-data_centroid = [b,a]
-print(data_centroid)
-
 # +
 # Total bounds is returning null array. This is probably because there are null values in geometry column. 
 # Follow Steps 1 and 2 to correct:
@@ -80,7 +92,14 @@ complaints_null_geo = cb3_complaints_geo[cb3_complaints_geo['geometry'].isna()]
 
 # 2 Remove all rows with null geometry from original geodataframe 
 cb3_complaints_geo = cb3_complaints_geo[cb3_complaints_geo['geometry'].notna()]
+# -
 
+
+bounds = cb3_complaints_geo.total_bounds
+a = np.mean(bounds[0:3:2]).round(3)
+b = np.mean(bounds[1:4:2]).round(3)
+data_centroid = [b,a]
+print(data_centroid)
 
 # +
 
@@ -91,14 +110,16 @@ cb3_complaints_geo = cb3_complaints_geo[cb3_complaints_geo['geometry'].notna()]
 
 
 # -
-
-
-
-
 cb3_complaints_geo.total_bounds
 
 
-cb3_complaints_geo.plot
+
+
+cbs = cb3_complaints_geo.community_board.unique()
+
+cbs = cb3_complaints_geo.loc[:,'community_board'].sort_values().unique()
+
+cbs
 
 mapcomplaints = folium.Map(location=data_centroid, tiles = 'cartodbpositron', zoom_start=10, control_scale=True)
 
