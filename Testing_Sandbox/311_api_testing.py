@@ -13,11 +13,15 @@
 #     name: python3
 # ---
 
-# """
-# ## BELOW: TESTING Socrata NY Open Data API. 
-# ####    Using request library to pull 311 data for Community Board
-#
-# """
+"""
+## BELOW: TESTING Socrata NY Open Data API. 
+####    Using request library to pull 311 data for Community Board
+
+#### To DO 
+1. Create Javascript that takes value of community board dropdown and passes it to query builder
+2. Create Date reader. 
+
+"""
 
 import pandas as pd
 import geopandas as gpd
