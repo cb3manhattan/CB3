@@ -113,13 +113,23 @@ cb3_complaints_geo = cb3_complaints_geo[cb3_complaints_geo['geometry'].notna()]
 cb3_complaints_geo.total_bounds
 
 
-
-
-cbs = cb3_complaints_geo.community_board.unique()
+# +
+# Get sorted unique community board values in data pull 
 
 cbs = cb3_complaints_geo.loc[:,'community_board'].sort_values().unique()
+# -
 
 cbs
+
+# +
+# Create drop down selection html for each community board 
+
+for i in cbs:
+    i=f"""<option value="{i}">{i}</option>"""
+    print(i)
+
+
+# -
 
 mapcomplaints = folium.Map(location=data_centroid, tiles = 'cartodbpositron', zoom_start=10, control_scale=True)
 
@@ -127,6 +137,9 @@ mapcomplaints = folium.Map(location=data_centroid, tiles = 'cartodbpositron', zo
 folium.features.GeoJson(cb3_complaints_geo,                                                                          
                        ).add_to(mapcomplaints)
 
+
+# Creates Folium map
+mapcomplaints
 
 # +
 # Create a Map instance
@@ -150,8 +163,5 @@ folium.Choropleth(
     #threshold_scale=[1, 2, 3, 4, 5],
     legend_name= 'Percentage of workers that bike to work').add_to(m)
 # -
-
-# Creates Folium map
-mapcomplaints
 
 
