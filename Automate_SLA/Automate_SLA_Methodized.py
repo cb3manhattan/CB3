@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # ---
 # jupyter:
 #   jupytext:
@@ -228,5 +229,20 @@ for index, row in agenda_df.iterrows():
                        "\n" + "Re:    " + row.b_tradename + "\n" + "       " +  row.prim_address + "\n" + "       " + 
                        "New York, NY" + "\n" )
             file.close() 
+# +
+# Create new text file for EMAILS for admin approvals to sla:
+desktop = os.path.expanduser("~/Desktop")
+top_folder = 'SLA_AUTO_OUTPUT'
+filepath = os.path.join(desktop,'Current Items','SLA_Agenda')
+
+sla_emails_text = os.path.join(filepath, 'sla_email_text_admin_approvals.txt')
+
+for index, row in agenda_df.iterrows():
+        with open(sla_emails_text, "a") as file:
+            file.write("\n \n \n" + "CB 3 No Objection To (New Application, Municipal Expansion, Alteration, Corporation Change) with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
+                       + row.b_tradename + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
+            file.close() 
+
 # -
+
 
