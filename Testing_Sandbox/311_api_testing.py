@@ -105,6 +105,18 @@ b = np.mean(bounds[1:4:2]).round(3)
 data_centroid = [b,a]
 print(data_centroid)
 
+cb3_complaints = cb3_complaints_geo.to_json()
+
+type(cb3_complaints)
+
+filepath_cb_complaints = r"/Users/calvindechicago/Desktop"
+
+# +
+#cb3_complaints_geo.to_file(filepath_cb_complaints, driver="GeoJSON")  
+# -
+
+print(cb3_complaints)
+
 # +
 
 
