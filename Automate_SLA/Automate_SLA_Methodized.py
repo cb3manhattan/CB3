@@ -16,7 +16,7 @@
 
 # """
 # The purpose of this script is to automate SLA tasks. This includes creating folders for each month and establishment,
-# creating emails and letters from templates, and more. 
+# creating emails and letters from templates, and more.   a
 #
 #
 # Process:
