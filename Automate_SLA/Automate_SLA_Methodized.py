@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.12.0
+#       jupytext_version: 1.4.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -359,3 +359,19 @@ agenda_df["app_type"] = agenda_df.apply(lambda x: 'False' if x.line[0].isdigit()
 
 # +
 # new_df = df[df.apply(lambda x : bool_provider(x['Rev_M'],x['Year']),axis=1)]
+
+# +
+# Test pull changes from calvinbrown32 to cb3manhattan
+# -
+
+# Pull test agenda (November) from personal github repo
+import requests
+url = "https://calvinbrown32.github.io/external_files/sla_app_type.txt"
+nov_agenda_example = requests.get(url).content
+
+nov_agenda_example
+
+
+r.content
+
+
