@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.4.2
+#       jupytext_version: 1.12.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -309,43 +309,65 @@ agenda_df.loc[agenda_df.line.str.contains("	Expansion onto Municipal Property"),
 #initialize app_type column to blank string
 agenda_df['app_type'] = ''
 
-iteration_number = 0
-
 for index, row in agenda_df.iterrows():
-    iteration_number +=1
     if row.line[0].isdigit() is False:
         a_type = row.line
-        row.app_type = ''
-        print(str(iteration_number) + row.app_type)
+        agenda_df.at[index, 'app_type'] = ''
+
     else:
-        row.app_type = a_type
-        print(str(iteration_number) + row.app_type)
+        agenda_df.at[index, 'app_type'] = a_type
         
-#         print(type + " is FALSE")
-#     if agenda_df["line"] == 'Alteration':
-#         type = 'Alteration'
-#         while agenda_df
-        
-#         agenda_df["app_type"] = 
+# Strip whitespace and newline characters from beginning and end of strings
+
+agenda_df['app_type'] = agenda_df['app_type'].str.strip()
+
+
 # -
 
 agenda_df
 
 
+
 # +
 def set_app_type(x):
-    if x[0].isdigit() is False:
-        app_type = x
+    
+    if x[0][0].isdigit() is False:
+        index_dict.update({x.name: x.line})
+        index_list.append(x.name)
+        app_type = x.line
+        print(app_type)
+#         print(index_dict)
+#         print("index list: " + str(index_list))
+        
+    else: 
+        print(app_type)
+        
+    
+        
+        
+# TO DO
+# I have a dictionary with the index and app type description for all relevant rows. 
+# Next I need to assign these to every column between the app type descriptor columns
+# Get list of index - must be numerical for comparison
+# For each app type description item in dictionary:
+    # If there is an index that is higher
+        # Set app type column to the app type description for all rows greater than index and less than next greatest index. 
+    
+    
+    # If there is no higher index item:
+        # Set 'app_type' column to the app type description for all rows greater than the index
+
+        
+
+        
 #         app_type = app_type_init
 #         print("app_type is: " + app_type) 
     
-        return ''
+#        return ''
 
-    else:
-        app_type = x
 #         print(x)
         
-        return app_type
+#        return app_type
         
     
     
@@ -353,7 +375,9 @@ def set_app_type(x):
 # -
 
 agenda_df["app_type"] = ''
-agenda_df["app_type"] = agenda_df.apply(lambda x: set_app_type(x['line']),axis=1)
+index_dict = {}
+index_list = []
+agenda_df["app_type", ""] = agenda_df.apply(lambda x: set_app_type(x),axis=1)
 
 agenda_df["app_type"] = agenda_df.apply(lambda x: 'False' if x.line[0].isdigit() is False else 'True', axis=1)
 
