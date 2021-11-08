@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.4.2
+#       jupytext_version: 1.12.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -40,15 +40,10 @@
 #      - track other SLA items
 #  - Create similar script that takes as an input an excel file instead of a text file.
 #  - Create script that inputs area code based on address. 
+#  - Ensure that code and file directories in functions can work on any machine. 
 #
 #
 # """
-
-# +
-# Print Conda Env info running in Jupyter Notebook 
-# #!conda info
-#import sys; print(sys.executable)
-# -
 
 import pandas as pd
 import datetime as dt
@@ -57,16 +52,22 @@ import requests
 import openpyxl
 import os
 import csv
+import sys
 
-agenda_pull = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_oct.txt"
+# Print Conda Env info running in Jupyter Notebook 
+# #!conda info
+print(sys.executable)
+
+# Set Text File. The Agenda will be read from here. 
+agenda = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\SLA_Agenda_Example.txt"
 
 
-def make_sla_folders(agenda_pull):
-    
+# +
+# Function to create Agenda Dataframe / Table
+def make_sla_dataframe(agenda):
     # Open the text file
     #r+ = read/write access mode
-    agenda = open(agenda_pull, 'r+')
-    
+    agenda = open(agenda, 'r+')
     #Readlines creates a list, where each index contains a line of text, which in this case is a single establishment. 
     contents = agenda.readlines()
     
@@ -79,14 +80,6 @@ def make_sla_folders(agenda_pull):
     #Remove illegal character (apostrophe) from each string, and replace 'B'way' with 'Broadway'
     agenda_df = agenda_df.apply(lambda x: x.str.replace("B'way", "Broadway"))
     agenda_df = agenda_df.apply(lambda x: x.str.replace("'", ""))
-    
-    # This line creates new column that contains a bool series with 'True' for every line that starts with a a digit
-    # Lines that do not contain a digit (agenda number) will be removed.
-    agenda_df['entry_row']= agenda_df['line'].str[0].str.isdigit()
-    
-    # Filters out rows that do not contain an agenda item (start with a digit). 
-    # Because the entry_row column is boolean, just calling it as as a filter will remove False entries.  
-    agenda_df = agenda_df[agenda_df.entry_row]
     
     # Create new column with agenda number only for each row
     agenda_df['agenda_number'] = agenda_df.loc[:,'line'].str.split(pat=".").str[0]
@@ -133,6 +126,52 @@ def make_sla_folders(agenda_pull):
     # This replaces NAN with empty string
     agenda_df['b_llc_name'] =agenda_df['b_llc_name'].fillna('')
     
+    # Clean agenda type header rows
+    agenda_df.loc[agenda_df.line.str.contains("Alterations"), 'line']='Alteration' 
+
+    agenda_df.loc[agenda_df.line.str.contains("Items not heard at Committee"), 'line']='Item not heard at Committee' 
+
+    agenda_df.loc[agenda_df.line.str.contains("	Expansion onto Municipal Property"), 'line']='Expansion onto Municipal Property' 
+    
+    
+    # Create Column showing Application Type for each Establishment
+    
+    #initialize app_type column to blank string
+    agenda_df['app_type'] = ''
+
+    for index, row in agenda_df.iterrows():
+        if row.line[0].isdigit() is False:
+            a_type = row.line
+            agenda_df.at[index, 'app_type'] = ''
+
+        else:
+            agenda_df.at[index, 'app_type'] = a_type
+
+    # Strip whitespace and newline characters from beginning and end of strings
+    agenda_df['app_type'] = agenda_df['app_type'].str.strip()
+    
+    
+    # This line creates new column that contains a bool series with 'True' for every line that starts with a a digit
+    # Lines that do not contain a digit (agenda number) will be removed.
+    agenda_df['entry_row']= agenda_df['line'].str[0].str.isdigit()
+    
+    # Filters out rows that do not contain an agenda item (start with a digit). 
+    # Because the entry_row column is boolean, just calling it as as a filter will remove False entries.  
+    agenda_df = agenda_df[agenda_df.entry_row]
+    
+    return agenda_df;
+    
+
+# -
+
+agenda_table = make_sla_dataframe(agenda)
+
+agenda_table
+
+
+# +
+def make_sla_folders(agenda_table):
+    
     # Current month (number and name) and year. This will be used to create top level folder. 
     month_name = str(datetime.now().strftime("%B"))
     month_num = str(datetime.now().month)
@@ -154,19 +193,17 @@ def make_sla_folders(agenda_pull):
         print(filepath)
     except Exception as e: print(e)
 
-    
-    
     # Strip whitespace from left and right of column. Consider doing this for other columns     
-    agenda_df['b_tradename'] = agenda_df.b_tradename.str.strip() 
-    agenda_df['b_llc_name'] = agenda_df['b_llc_name'].str.strip()
-    agenda_df['prim_address'] = agenda_df['prim_address'].str.strip()
+    agenda_table['b_tradename'] = agenda_table.b_tradename.str.strip() 
+    agenda_table['b_llc_name'] = agenda_table['b_llc_name'].str.strip()
+    agenda_table['prim_address'] = agenda_table['prim_address'].str.strip()
     
     
     # 1 Make new folder path for each establishment
     # 2 This will be the primary address followed by a dash followed by the trade name if it exists, else the LLC name
     #      These will follow this pattern: '45 Avenue B - Lamias Fish Market'
     #
-    for index, row in agenda_df.iterrows():
+    for index, row in agenda_table.iterrows():
         est_filepath = ''
         if row.b_tradename != '':
             est_filepath = row.prim_address + ' - ' + row.b_tradename
@@ -181,22 +218,17 @@ def make_sla_folders(agenda_pull):
     
         except Exception as e: print(e)
         
-        
-    return agenda_df;
+
+# -
 
 
-oct_pull =  r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_oct.txt"
-
-agenda_df = make_sla_folders(oct_pull)
+make_sla_folders(agenda_table)
 
 # +
 # Append automated output to Standard SLA Tracking Template
 # https://stackoverflow.com/questions/57314254/pandas-df-write-to-excel-template-with-prepared-styles
 
 TEMPLATE_PATH = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Automation Work\SLA_Tracker_Template.xlsx"
-# -
-
-agenda_df
 
 # +
 # Create new text file for emails to sla:
