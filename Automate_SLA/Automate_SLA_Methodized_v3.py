@@ -15,37 +15,31 @@
 # ---
 
 # """
-# The purpose of this script is to automate SLA tasks. This includes creating folders for each month and establishment,
-# creating emails and letters from templates, and more.   a
+# # Automating SLA Document Creation
+#
+# ## The purpose of this script is to automate SLA tasks. This includes the following:
+# - Creating a table with each component of the application (i.e. address, tradename, etc.)
+# - Creating folders for each establishment for archiving
+# - Creating emails, letters, etc. 
 #
 #
-# Process:
-# 1) Copy list of items from online agenda into text doc as shown below
-# 2) I will likely want to quickly remove certain text from this, such as section descriptions like 'New Liquor License Applications,' or other info that will not go into the final outputs like the description of the license type. 
-# 3) The most important thing will likely be keeping each entry to one line in the input file as I will likely use line breaks to parse each item. 
-# 4) If this doesn't work, another option might be the period (.) followed by blank spaces. 
-# 5) DBA format seems to be in parentheses after the name. 
-# 6) I will have to manually add lawyers names.
-# 7) Agenda number is the number in the list itself. 
-#
-# ----------------------------------------------------------------------------
-# 1 - Open and read lines of text file
-#     - https://www.geeksforgeeks.org/reading-writing-text-files-python/
-# 2 - Iterate through each line and build a dataframe / table from the relevant contents
-# 3 - Filter out rows that begin with numeric. These should be the agenda items. 
-# 4 - split at period and get first item, which is the numeric agenda item number. 
-# 5 - split again and get the business name
-# 6 - split again and get the address
+# ## Process:
+# 1. Copy list of items from online agenda into text doc as shown below
+# 2. Quickly remove unwanted text from file. Useful text includes Application Type headings and SLA application agenda items.  
+# 3. Various functions should be designed to have the following outputs:
+#     - A table of the applications with each element parsed out into different columns. One table output should feed
+#     directly into the tracking sheet I have.
+#     - Template text with address block, email subject, and text
 #
 # ---------------------------------------------------------------------------------
 #
-# TO DO
-#  - Create code to remove illegal characters from strings
+# ## TO DO
 #  - Start scripting work to input values into template letters
 #  - Create output for excel, which can serve a number of functions:
 #      - a place to input additional info like lawyers name
 #      - track other SLA items
-#  - Create similar script that takes as an input an excel file instead of a text file. 
+#  - Create similar script that takes as an input an excel file instead of a text file.
+#  - Create script that inputs area code based on address. 
 #
 #
 # """
@@ -59,6 +53,7 @@
 import pandas as pd
 import datetime as dt
 from datetime import datetime
+import requests
 import openpyxl
 import os
 import csv
@@ -343,41 +338,10 @@ def set_app_type(x):
         print(app_type)
         
     
-        
-        
-# TO DO
-# I have a dictionary with the index and app type description for all relevant rows. 
-# Next I need to assign these to every column between the app type descriptor columns
-# Get list of index - must be numerical for comparison
-# For each app type description item in dictionary:
-    # If there is an index that is higher
-        # Set app type column to the app type description for all rows greater than index and less than next greatest index. 
-    
-    
-    # If there is no higher index item:
-        # Set 'app_type' column to the app type description for all rows greater than the index
-
-        
-
-        
-#         app_type = app_type_init
-#         print("app_type is: " + app_type) 
-    
-#        return ''
-
-#         print(x)
-        
-#        return app_type
-        
     
     
     
 # -
-
-agenda_df["app_type"] = ''
-index_dict = {}
-index_list = []
-agenda_df["app_type", ""] = agenda_df.apply(lambda x: set_app_type(x),axis=1)
 
 agenda_df["app_type"] = agenda_df.apply(lambda x: 'False' if x.line[0].isdigit() is False else 'True', axis=1)
 
@@ -388,14 +352,11 @@ agenda_df["app_type"] = agenda_df.apply(lambda x: 'False' if x.line[0].isdigit()
 # Test pull changes from calvinbrown32 to cb3manhattan
 # -
 
-# Pull test agenda (November) from personal github repo
-import requests
+
+
+# +
+# Pull Sample Agenda from personal github repo
 url = "https://calvinbrown32.github.io/external_files/sample_agenda.txt"
-nov_agenda_example = requests.get(url).content
+agenda_sample = requests.get(url).content
 
-nov_agenda_example
-
-
-sample_agenda = r.content
-
-
+# This returns text (above returns raw bytes)
