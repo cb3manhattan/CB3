@@ -52,6 +52,8 @@ import datetime as dt
 from datetime import datetime
 import requests
 import openpyxl
+from openpyxl import load_workbook
+import xlsxwriter
 import os
 import csv
 import sys
@@ -175,11 +177,42 @@ def make_sla_dataframe(agenda):
     # Because the entry_row column is boolean, just calling it as as a filter will remove False entries.  
     agenda_df = agenda_df[agenda_df.entry_row]
     
+    
     return agenda_df;
 
 agenda_table = make_sla_dataframe(agenda)
 
 agenda_table
+
+# +
+# df.loc[:, ['name2', 'name5']]
+# Create clean version for input into tracker 
+
+tracker_df = agenda_table.loc[agenda_table['app_type'] 
+                              == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
+
+
+
+# book = load_workbook('test.xlsx')
+# writer = pandas.ExcelWriter('test.xlsx', engine='openpyxl')
+# writer.book = book
+# writer.sheets = {ws.title: ws for ws in book.worksheets}
+
+# for sheetname in writer.sheets:
+#     df1.to_excel(writer,sheet_name=sheetname, startrow=writer.sheets[sheetname].max_row, index = False,header= False)
+
+# writer.save()
+
+EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
+
+# df1.to_excel(writer, startrow = 2,index = False, Header = False)
+#df1.to_excel(writer, startrow = 2,index = False, Header = False)
+
+writer = pd.ExcelWriter(EXCEL_TEMPLATE, engine='openpyxl', index = False, Header = False)
+writer.save()
+writer.close()
+
+
 
 # +
 """
