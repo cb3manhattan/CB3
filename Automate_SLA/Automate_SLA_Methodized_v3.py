@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.12.0
+#       jupytext_version: 1.4.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -40,19 +40,19 @@
 #      - track other SLA items
 #  - Create similar script that takes as an input an excel file instead of a text file.
 #  - Create script that inputs area code based on address. 
-#  - Ensure that code and file directories in functions can work on any machine. 
+#  - Move file directories out of functions. These should be arguments to the functions
 #
 #
 # """
-
-import pandas as pd
-import datetime as dt
-from datetime import datetime
-import requests
-import openpyxl
-import os
-import csv
-import sys
+#
+# import pandas as pd
+# import datetime as dt
+# from datetime import datetime
+# import requests
+# import openpyxl
+# import os
+# import csv
+# import sys
 
 # Print Conda Env info running in Jupyter Notebook 
 # #!conda info
@@ -62,7 +62,6 @@ print(sys.executable)
 agenda = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\SLA_Agenda_Example.txt"
 
 
-# +
 # Function to create Agenda Dataframe / Table
 def make_sla_dataframe(agenda):
     # Open the text file
@@ -160,16 +159,12 @@ def make_sla_dataframe(agenda):
     agenda_df = agenda_df[agenda_df.entry_row]
     
     return agenda_df;
-    
-
-# -
 
 agenda_table = make_sla_dataframe(agenda)
 
 agenda_table
 
 
-# +
 def make_sla_folders(agenda_table):
     
     # Current month (number and name) and year. This will be used to create top level folder. 
@@ -217,9 +212,6 @@ def make_sla_folders(agenda_table):
             print(fin_filepath)
     
         except Exception as e: print(e)
-        
-
-# -
 
 
 make_sla_folders(agenda_table)
