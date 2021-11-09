@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.4.2
+#       jupytext_version: 1.12.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -39,20 +39,22 @@
 #      - a place to input additional info like lawyers name
 #      - track other SLA items
 #  - Create similar script that takes as an input an excel file instead of a text file.
-#  - Create script that inputs area code based on address. 
-#  - Move file directories out of functions. These should be arguments to the functions
+#  - Create script that inputs area code based on address.
+#  - Other info from agenda might be useful: License type, app type (method of operation change, etc)
 #
 #
 # """
 #
-# import pandas as pd
-# import datetime as dt
-# from datetime import datetime
-# import requests
-# import openpyxl
-# import os
-# import csv
-# import sys
+#
+
+import pandas as pd
+import datetime as dt
+from datetime import datetime
+import requests
+import openpyxl
+import os
+import csv
+import sys
 
 # Print Conda Env info running in Jupyter Notebook 
 # #!conda info
@@ -121,9 +123,24 @@ def make_sla_dataframe(agenda):
     # This creates a column showing the text in the first parentheses. The second set is not important because these will always be
     # notes on the liquor licence, which aren't important for this exercise. 
     agenda_df['b_llc_name'] = agenda_df['b_name'].str.extract('\(([^)]+)')
-
+    
     # This replaces NAN with empty string
     agenda_df['b_llc_name'] =agenda_df['b_llc_name'].fillna('')
+    
+    # Where LLC name is blank, set to value of b_tradename, which erroneously contains the llc names 
+
+    def set_b_name(x):
+        if x['b_llc_name'] == '':
+            return x['b_tradename']
+        else:    
+            return x['b_llc_name'];
+
+    agenda_df['b_llc_name'] = agenda_df.apply(lambda x: set_b_name(x), axis=1)
+
+
+    # Where tradename and LLC name are the same, set tradename to empty string
+    agenda_df.loc[agenda_df['b_tradename'] == agenda_df['b_llc_name'], 'b_tradename'] ='' 
+
     
     # Clean agenda type header rows
     agenda_df.loc[agenda_df.line.str.contains("Alterations"), 'line']='Alteration' 
@@ -164,29 +181,27 @@ agenda_table = make_sla_dataframe(agenda)
 
 agenda_table
 
+# +
+"""
+This function creates folders for archiving Executed Stips and Resolutions
+param: agenda_table - This is an automatically produced dataframe using the make_sla_function
+param: Filepath - This is the filepath where the folders will be created, and it should be noted that each folder will be
+       created in a top level folder containing the month. This parameter be created by user and provided as an argument. 
 
-def make_sla_folders(agenda_table):
+"""
+
+def make_sla_folders(agenda_table, filepath):
     
     # Current month (number and name) and year. This will be used to create top level folder. 
     month_name = str(datetime.now().strftime("%B"))
     month_num = str(datetime.now().month)
     year = str(datetime.now().year)
-    
+
     # This line creates the top level directory with the month, year, and 'SLA'
     month_dir = month_num + '-' + month_name + ' ' + year + ' SLA'
-
     
-    #Print message that script is running
-    print("Making SLA folders at following location:")
+    filepath = os.path.join(filepath, month_dir)
     
-    # FIND DESKTOP PATH and create a folder structure below it. 
-    desktop = os.path.expanduser("~/Desktop")
-    top_folder = 'SLA_AUTO_OUTPUT'
-    filepath = os.path.join(desktop,'Current Items', 'SLA_Agenda', top_folder, month_dir)
-    try:
-        os.makedirs(filepath)
-        print(filepath)
-    except Exception as e: print(e)
 
     # Strip whitespace from left and right of column. Consider doing this for other columns     
     agenda_table['b_tradename'] = agenda_table.b_tradename.str.strip() 
@@ -209,12 +224,15 @@ def make_sla_folders(agenda_table):
         
         try:
             os.makedirs(fin_filepath)
-            print(fin_filepath)
+            
     
         except Exception as e: print(e)
+# -
 
 
-make_sla_folders(agenda_table)
+filepath = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\SLA_AUTO_OUTPUT"
+
+make_sla_folders(agenda_table, filepath)
 
 # +
 # Append automated output to Standard SLA Tracking Template
@@ -384,3 +402,28 @@ url = "https://calvinbrown32.github.io/external_files/sample_agenda.txt"
 agenda_sample = requests.get(url).content
 
 # This returns text (above returns raw bytes)
+# -
+
+# Create Directory. This script creates a directory 
+def create_sla_dir():
+    # Current month (number and name) and year. This will be used to create top level folder. 
+    month_name = str(datetime.now().strftime("%B"))
+    month_num = str(datetime.now().month)
+    year = str(datetime.now().year)
+
+    # This line creates the top level directory with the month, year, and 'SLA'
+    month_dir = month_num + '-' + month_name + ' ' + year + ' SLA'
+
+    #Print message that script is running
+    print("Making SLA folders at following location:")
+
+    # FIND DESKTOP PATH and create a folder structure below it. 
+    desktop = os.path.expanduser("~/Desktop")
+    top_folder = 'SLA_AUTO_OUTPUT'
+    filepath = os.path.join(desktop,'Current Items', 'SLA_Agenda', top_folder, month_dir)
+    try:
+        os.makedirs(filepath)
+        print(filepath)
+    except Exception as e: print(e)
+        
+    return filepath;
