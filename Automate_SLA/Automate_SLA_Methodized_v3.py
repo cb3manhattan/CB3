@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.12.0
+#       jupytext_version: 1.4.2
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -62,9 +62,15 @@ import sys
 # #!conda info
 print(sys.executable)
 
+# +
 # Set Text File. The Agenda will be read from here. 
-agenda = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\SLA_Agenda_Example.txt"
+#agenda = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\SLA_Agenda_Example.txt"
 
+# On Mac
+agenda = r"/Users/calvindechicago/Documents/GitHub/CB3/sample_agenda/sample_agenda.txt"
+
+
+# -
 
 # Function to create Agenda Dataframe / Table
 def make_sla_dataframe(agenda):
@@ -185,13 +191,24 @@ agenda_table = make_sla_dataframe(agenda)
 agenda_table
 
 # +
-# df.loc[:, ['name2', 'name5']]
 # Create clean version for input into tracker 
 
 tracker_df = agenda_table.loc[agenda_table['app_type'] 
                               == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
 
 
+# +
+# SET EXCEL FILEPATH
+
+#EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
+EXCEL_TEMPLATE_MAC = r"/Users/calvindechicago/Desktop/Community Board 3/SLA/SLA_tracker_template.xlsx"
+
+# +
+# Append Tracker dataframe to SLA Tracker
+
+#writer = pd.ExcelWriter(filename, engine='openpyxl', mode='a')
+
+# df.loc[:, ['name2', 'name5']]
 
 # book = load_workbook('test.xlsx')
 # writer = pandas.ExcelWriter('test.xlsx', engine='openpyxl')
@@ -203,14 +220,30 @@ tracker_df = agenda_table.loc[agenda_table['app_type']
 
 # writer.save()
 
-EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
+#     with pd.ExcelWriter(EXCEL_FP) as writer:
+#     df_age_county.to_excel(writer, sheet_name='county_age')
+#     df_transpo_mode.to_excel(writer, sheet_name='county_transpo_mode')
+
 
 # df1.to_excel(writer, startrow = 2,index = False, Header = False)
 #df1.to_excel(writer, startrow = 2,index = False, Header = False)
 
-writer = pd.ExcelWriter(EXCEL_TEMPLATE, engine='openpyxl', index = False, Header = False)
-writer.save()
+
+# with pd.ExcelWriter('test.xlsx', engine='openpyxl', mode='a') as writer:
+#     d1.to_excel(writer,sheet_name='d1')
+#     d2.to_excel(writer,sheet_name='d2')
+#     writer.save()
+
+# writer.close()
+
+with pd.ExcelWriter(EXCEL_TEMPLATE_MAC, engine='openpyxl', mode='a') as writer:
+    agenda_table.to_excel(writer, sheet_name='Sheet1')
+    writer.save()
 writer.close()
+
+# writer = pd.ExcelWriter(EXCEL_TEMPLATE, engine='openpyxl', mode='a')
+# writer.save()
+# writer.close()
 
 
 
