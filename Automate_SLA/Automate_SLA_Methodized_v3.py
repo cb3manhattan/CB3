@@ -206,56 +206,17 @@ agenda_table = make_sla_dataframe(agenda)
 agenda_table
 
 # +
-# SET EXCEL FILEPATH
+# Set Filepath
 
 if sys.platform == "darwin":
     #On Mac
-    EXCEL_TEMPLATE_MAC = r"/Users/calvindechicago/Desktop/Community Board 3/SLA/SLA_tracker_template.xlsx"
+    filepath = r"/Users/calvindechicago/Desktop/Community Board 3/SLA"
 
 elif sys.platform == "win32" or sys.platform == "win64":
     #On PC
-    EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
+    filepath = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\SLA_AUTO_OUTPUT"
 
 
-# +
-
-
-def create_sla_tracker(agenda_table, excel_filepath):
-    
-    """
-    This takes the automated SLA Agenda Dataframe created by the make_sla_dataframe function and exports 
-    agenda number, business name, and address to a new sheet in the tracker template. The contents of the new sheet 
-    can be cut and paste into main tracker sheet.
-    
-     Parameters
-        ----------
-        agenda_table: pandas dataframe
-            dataframe with all relevant sla application parsed out
-            
-        excel_filepath: filepath
-            filepath to sla tracker excel file
-    
-    """
-    
-    # Create clean version for input into tracker 
-    tracker_df = agenda_table.loc[agenda_table['app_type'] 
-                              == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
-    
-    # Append Tracker dataframe to SLA Tracker. This creates a separate sheet that 
-    # can be cut and paste into main tracker sheet
-    
-    with pd.ExcelWriter(excel_filepath, engine='openpyxl', mode='a') as writer:
-        tracker_df.to_excel(writer, sheet_name='Automated_Output')
-        writer.save()
-        writer.close()
-
-    return 0;
-
-
-# -
-
-
-create_sla_tracker(agenda_table, EXCEL_TEMPLATE_MAC)
 
 
 # +
@@ -305,30 +266,96 @@ param: Filepath - This is the filepath where the folders will be created, and it
             
     
         except Exception as e: print(e)
-
-
-# +
-# Set Filepath
-
-if sys.platform == "darwin":
-    #On Mac
-    filepath = r"/Users/calvindechicago/Desktop/Community Board 3/SLA"
-
-elif sys.platform == "win32" or sys.platform == "win64":
-    #On PC
-    filepath = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\SLA_AUTO_OUTPUT"
-
-
-
 # -
+
 
 make_sla_folders(agenda_table, filepath)
 
 # +
-# Append automated output to Standard SLA Tracking Template
-# https://stackoverflow.com/questions/57314254/pandas-df-write-to-excel-template-with-prepared-styles
+# SET EXCEL FILEPATH
 
-TEMPLATE_PATH = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Automation Work\SLA_Tracker_Template.xlsx"
+if sys.platform == "darwin":
+    #On Mac
+    EXCEL_TEMPLATE = r"/Users/calvindechicago/Desktop/Community Board 3/SLA/SLA_tracker_template.xlsx"
+
+elif sys.platform == "win32" or sys.platform == "win64":
+    #On PC
+    EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
+
+
+# +
+
+
+def create_sla_tracker(agenda_table, excel_filepath):
+    
+    """
+    This takes the automated SLA Agenda Dataframe created by the make_sla_dataframe function and exports 
+    agenda number, business name, and address to a new sheet in the tracker template. The contents of the new sheet 
+    can be cut and paste into main tracker sheet.
+    
+     Parameters
+        ----------
+        agenda_table: pandas dataframe
+            dataframe with all relevant sla application parsed out
+            
+        excel_filepath: filepath
+            filepath to sla tracker excel file
+    
+    """
+    
+    # Create clean version for input into tracker 
+    tracker_df = agenda_table.loc[agenda_table['app_type'] 
+                              == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
+    
+    # Append Tracker dataframe to SLA Tracker. This creates a separate sheet that 
+    # can be cut and paste into main tracker sheet
+    
+    with pd.ExcelWriter(excel_filepath, engine='openpyxl', mode='a') as writer:
+        tracker_df.to_excel(writer, sheet_name='Automated_Output')
+        writer.save()
+        writer.close()
+        
+    print("Exporting SLA Tracking info")
+
+    return 0;
+
+
+# -
+
+
+create_sla_tracker(agenda_table, EXCEL_TEMPLATE)
+
+
+# +
+def add_reps(agenda_table):
+    """
+    This function adds the representative names into the automated SLA dataframe. 
+    Reps are added manually into the tracking form. Once this has been completed, this function takes the rec names in the excel file and merges
+    them in the main automated dataframe created by the make_sla_dataframe function. 
+    
+    param: agenda_table - this is the automated dataframe produced from the make_sla_datafrme
+    
+    """
+    
+    # Read in excel to get representatives
+    sla_tracking_df = pd.read_excel(EXCEL_TEMPLATE, sheet_name = "SLA Tracking Sheet")
+    agenda_table = pd.merge(agenda_table, sla_tracking_df[['Rep Name', 'Business Name']],left_on = 'b_name', right_on = 'Business Name', how = 'left')
+    print("returning sla agenda dataframe with representative names added")
+    
+    return agenda_table;
+
+    
+
+# -
+
+agenda_table = add_reps(agenda_table)
+
+agenda_table
+
+agenda_table_reps = pd.merge(agenda_table, sla_tracking_df[['Rep Name', 'Business Name']], left_on = 'b_name', right_on = 'Business Name', how = 'left')
+
+
+agenda_table_reps
 
 # +
 # Create new text file for emails to sla:
