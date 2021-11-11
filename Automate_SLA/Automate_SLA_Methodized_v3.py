@@ -38,10 +38,10 @@
 #  - Create output for excel, which can serve a number of functions:
 #      - a place to input additional info like lawyers name
 #      - track other SLA items
-#  - Create similar script that takes as an input an excel file instead of a text file.
-#  - Create script that inputs area code based on address.
+#  - Create function to pull the representative names from the excel tracker and add them to the main dataframe.
+#  - Create script that inputs area code based on address. Another option is to add this to the tracker 
+#  and then pull from the tracker and add to the main dataframe. 
 #  - Other info from agenda might be useful: License type, app type (method of operation change, etc)
-#
 #
 # """
 #
@@ -57,6 +57,7 @@ import xlsxwriter
 import os
 import csv
 import sys
+from sys import platform
 
 # Print Conda Env info running in Jupyter Notebook 
 # #!conda info
@@ -64,16 +65,30 @@ print(sys.executable)
 
 # +
 # Set Text File. The Agenda will be read from here. 
-#agenda = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\SLA_Agenda_Example.txt"
 
-# On Mac
-agenda = r"/Users/calvindechicago/Documents/GitHub/CB3/sample_agenda/sample_agenda.txt"
-
+if sys.platform == "darwin":
+    # On Mac
+    agenda = r"/Users/calvindechicago/Documents/GitHub/CB3/sample_agenda/sample_agenda.txt"   
+    
+elif sys.platform == "win32" or sys.platform == "win64":
+    # Windows...
+    agenda = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\SLA_Agenda_Example.txt"
 
 # -
 
 # Function to create Agenda Dataframe / Table
 def make_sla_dataframe(agenda):
+    """
+    This function takes a .txt file of the sla agenda copied and pasted from the cb3 website and parses the relevant 
+    information for each application out so that it is easily accessed and used for various outputs such as letter/email
+    content and more. 
+             Parameters
+            ----------
+        agenda: txt file
+           txt file of sla agenda copied from website
+    
+    """
+    
     # Open the text file
     #r+ = read/write access mode
     agenda = open(agenda, 'r+')
@@ -191,72 +206,69 @@ agenda_table = make_sla_dataframe(agenda)
 agenda_table
 
 # +
-# Create clean version for input into tracker 
-
-tracker_df = agenda_table.loc[agenda_table['app_type'] 
-                              == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
-
-
-# +
 # SET EXCEL FILEPATH
 
-#EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
-EXCEL_TEMPLATE_MAC = r"/Users/calvindechicago/Desktop/Community Board 3/SLA/SLA_tracker_template.xlsx"
+if sys.platform == "darwin":
+    #On Mac
+    EXCEL_TEMPLATE_MAC = r"/Users/calvindechicago/Desktop/Community Board 3/SLA/SLA_tracker_template.xlsx"
 
-# +
-# Append Tracker dataframe to SLA Tracker
-
-#writer = pd.ExcelWriter(filename, engine='openpyxl', mode='a')
-
-# df.loc[:, ['name2', 'name5']]
-
-# book = load_workbook('test.xlsx')
-# writer = pandas.ExcelWriter('test.xlsx', engine='openpyxl')
-# writer.book = book
-# writer.sheets = {ws.title: ws for ws in book.worksheets}
-
-# for sheetname in writer.sheets:
-#     df1.to_excel(writer,sheet_name=sheetname, startrow=writer.sheets[sheetname].max_row, index = False,header= False)
-
-# writer.save()
-
-#     with pd.ExcelWriter(EXCEL_FP) as writer:
-#     df_age_county.to_excel(writer, sheet_name='county_age')
-#     df_transpo_mode.to_excel(writer, sheet_name='county_transpo_mode')
-
-
-# df1.to_excel(writer, startrow = 2,index = False, Header = False)
-#df1.to_excel(writer, startrow = 2,index = False, Header = False)
-
-
-# with pd.ExcelWriter('test.xlsx', engine='openpyxl', mode='a') as writer:
-#     d1.to_excel(writer,sheet_name='d1')
-#     d2.to_excel(writer,sheet_name='d2')
-#     writer.save()
-
-# writer.close()
-
-with pd.ExcelWriter(EXCEL_TEMPLATE_MAC, engine='openpyxl', mode='a') as writer:
-    agenda_table.to_excel(writer, sheet_name='Sheet1')
-    writer.save()
-writer.close()
-
-# writer = pd.ExcelWriter(EXCEL_TEMPLATE, engine='openpyxl', mode='a')
-# writer.save()
-# writer.close()
-
+elif sys.platform == "win32" or sys.platform == "win64":
+    #On PC
+    EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
 
 
 # +
-"""
+
+
+def create_sla_tracker(agenda_table, excel_filepath):
+    
+    """
+    This takes the automated SLA Agenda Dataframe created by the make_sla_dataframe function and exports 
+    agenda number, business name, and address to a new sheet in the tracker template. The contents of the new sheet 
+    can be cut and paste into main tracker sheet.
+    
+     Parameters
+        ----------
+        agenda_table: pandas dataframe
+            dataframe with all relevant sla application parsed out
+            
+        excel_filepath: filepath
+            filepath to sla tracker excel file
+    
+    """
+    
+    # Create clean version for input into tracker 
+    tracker_df = agenda_table.loc[agenda_table['app_type'] 
+                              == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
+    
+    # Append Tracker dataframe to SLA Tracker. This creates a separate sheet that 
+    # can be cut and paste into main tracker sheet
+    
+    with pd.ExcelWriter(excel_filepath, engine='openpyxl', mode='a') as writer:
+        tracker_df.to_excel(writer, sheet_name='Automated_Output')
+        writer.save()
+        writer.close()
+
+    return 0;
+
+
+# -
+
+
+create_sla_tracker(agenda_table, EXCEL_TEMPLATE_MAC)
+
+
+# +
+
+def make_sla_folders(agenda_table, filepath):
+    """
 This function creates folders for archiving Executed Stips and Resolutions
+
 param: agenda_table - This is an automatically produced dataframe using the make_sla_function
 param: Filepath - This is the filepath where the folders will be created, and it should be noted that each folder will be
        created in a top level folder containing the month. This parameter be created by user and provided as an argument. 
 
 """
-
-def make_sla_folders(agenda_table, filepath):
     
     # Current month (number and name) and year. This will be used to create top level folder. 
     month_name = str(datetime.now().strftime("%B"))
@@ -293,10 +305,22 @@ def make_sla_folders(agenda_table, filepath):
             
     
         except Exception as e: print(e)
+
+
+# +
+# Set Filepath
+
+if sys.platform == "darwin":
+    #On Mac
+    filepath = r"/Users/calvindechicago/Desktop/Community Board 3/SLA"
+
+elif sys.platform == "win32" or sys.platform == "win64":
+    #On PC
+    filepath = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\SLA_AUTO_OUTPUT"
+
+
+
 # -
-
-
-filepath = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\SLA_AUTO_OUTPUT"
 
 make_sla_folders(agenda_table, filepath)
 
