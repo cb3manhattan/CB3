@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="942798d9-4151-4ecb-9646-edd7d466fe2b" name="Changes" comment="" />
+    <list default="true" id="cf3eb99f-889d-456a-bade-381ce88c4446" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.ipynb_checkpoints/Automate_SLA_Methodized_v3-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../.ipynb_checkpoints/Automate_SLA_Methodized_v3-checkpoint.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Automate_SLA.py" beforeDir="false" afterPath="$PROJECT_DIR$/Automate_SLA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/November_SLA.py" beforeDir="false" afterPath="$PROJECT_DIR$/November_SLA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Automate_SLA_Methodized_v3.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../Automate_SLA_Methodized_v3.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Automate_SLA_Methodized_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Automate_SLA_Methodized_v3.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectId" id="1wMLsB7JGlQ1yhbRMqGN551APcJ" />
+  <component name="ProjectId" id="20pnJ6sUfpAramgVQubeJBc9Bca" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -18,12 +26,12 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Automate_SLA/Automate_SLA" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Automate_SLA.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.main">
-    <configuration name="get-pip" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="CB3" />
+  <component name="RunManager" selected="Python.November_SLA">
+    <configuration name="Automate_SLA" type="PythonConfigurationType" factoryName="Python">
+      <module name="Automate_SLA" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -34,7 +42,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/get-pip.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Automate_SLA.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -43,8 +51,8 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="CB3" />
+    <configuration name="November_SLA" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Automate_SLA" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -55,7 +63,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/November_SLA.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -64,32 +72,25 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.Automate_SLA" />
+      <item itemvalue="Python.November_SLA" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.get-pip" />
+        <item itemvalue="Python.November_SLA" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="942798d9-4151-4ecb-9646-edd7d466fe2b" name="Changes" comment="" />
-      <created>1628263715944</created>
+      <changelist id="cf3eb99f-889d-456a-bade-381ce88c4446" name="Changes" comment="" />
+      <created>1636750321784</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1628263715944</updated>
+      <updated>1636750321784</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

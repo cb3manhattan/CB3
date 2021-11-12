@@ -2,7 +2,7 @@
 Automatically Create November SLA
 """
 
-from Automate_SLA import make_sla_dataframe, make_sla_folders, create_sla_tracker
+from Automate_SLA import make_sla_dataframe, make_sla_folders, create_sla_tracker, reso_text_output
 import sys
 from sys import platform
 
@@ -19,7 +19,7 @@ elif sys.platform == "win32" or sys.platform == "win64":
     # Windows...
     agenda = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\SLA_Agenda_Example.txt"
     filepath = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\SLA_AUTO_OUTPUT"
-    EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Calvin Docs\SLA\Tracker_Template\SLA_Tracker_Template2.xlsx"
+    EXCEL_TEMPLATE = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\Tracker_Template\Tracker_Template.xlsx"
 
 
 agenda_table = make_sla_dataframe(agenda)
@@ -27,3 +27,8 @@ agenda_table = make_sla_dataframe(agenda)
 make_sla_folders(agenda_table, filepath)
 
 create_sla_tracker(agenda_table, EXCEL_TEMPLATE)
+
+# Run add_reps once reps have been added manually to tracker.
+# add_reps(agenda_table)
+
+reso_text_output(agenda_table, filepath)

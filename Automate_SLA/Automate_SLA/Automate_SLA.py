@@ -21,11 +21,17 @@ TO DO
     Create output for excel, which can serve a number of functions:
         a place to input additional info like lawyers name
         track other SLA items
-    Create function to pull the representative names from the excel tracker and add them to the main dataframe.
+
     Create script that inputs area code based on address. Another option is to add this to the tracker and then pull from the tracker and add to the main dataframe.
     Other info from agenda might be useful: License type, app type (method of operation change, etc)
 
+LIST OF FUNCTIONS and Arguments:
 
+make_sla_dataframe(agenda)
+make_sla_folders(agenda_table, filepath)
+create_sla_tracker(agenda_table, excel_filepath)
+add_reps(agenda_table)
+reso_text_output(filepath)
 
 """
 
@@ -170,7 +176,7 @@ def make_sla_folders(agenda_table, filepath):
     This function creates folders for archiving Executed Stips and Resolutions
 
     param: agenda_table - This is an automatically produced dataframe using the make_sla_function
-    param: Filepath - This is the filepath where the folders will be created, and it should be noted that each folder will be
+    param: filepath - This is the filepath where the folders will be created, and it should be noted that each folder will be
     created in a top level folder containing the month. This parameter be created by user and provided as an argument.
     """
 
@@ -233,14 +239,14 @@ def create_sla_tracker(agenda_table, excel_filepath):
     # Append Tracker dataframe to SLA Tracker. This creates a separate sheet that
     # can be cut and paste into main tracker sheet
 
-    with pd.ExcelWriter(excel_filepath, engine='openpyxl', mode='a') as writer:
+    with pd.ExcelWriter(excel_filepath, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
         tracker_df.to_excel(writer, sheet_name='Automated_Output')
         writer.save()
-        writer.close()
+     #   writer.close()
 
     print("Exporting SLA Tracking info")
 
-    return 0;
+    return agenda_table;
 
 
 def add_reps(agenda_table):
@@ -260,5 +266,64 @@ def add_reps(agenda_table):
     print("returning sla agenda dataframe with representative names added")
 
     return agenda_table;
+
+
+# Function to output text for use in resolution letters and emails.
+# This is a work in progress and the hope is to automate more of this production work over time.
+
+
+def reso_text_output(agenda_table, filepath):
+
+    """
+    This function outputs text for use in resolution letters and emails. This is a work in progress, and
+    the hope is to automate more of this production work over time.
+
+    param: filepath - This is the filepath where the folders will be created, and it should be noted that each folder will be
+    created in a top level folder containing the month. This parameter be created by user and provided as an argument.
+
+    """
+
+    print("Running the reso_text_output function and outputing to: ")
+
+    # This outputs 1) an email subject, 2) address block
+    sla_emails_text = os.path.join(filepath, 'sla_email_text.txt')
+    print(sla_emails_text)
+
+    for index, row in agenda_table.iterrows():
+        if (row.b_tradename != '' and row.b_llc_name != ''):
+            with open(sla_emails_text, "a") as file:
+                file.write(
+                    "\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address + "\n"
+                                                                                                              "Re:    " + row.b_llc_name + "\n" + "       " + "d/b/a " + row.b_tradename + "\n" + "       " +
+                    row.prim_address + "\n" + "       " + "New York, NY" + "\n")
+                file.close()
+
+        else:
+            with open(sla_emails_text, "a") as file:
+                file.write("\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address +
+                           "\n" + "Re:    " + row.b_tradename + "\n" + "       " + row.prim_address + "\n" + "       " +
+                           "New York, NY" + "\n")
+                file.close()
+
+                # This outputs email text
+
+    sla_emails_text = os.path.join(filepath, 'sla_email_text_admin_approvals.txt')
+    print(sla_emails_text)
+
+    for index, row in agenda_table.iterrows():
+        if (row.b_tradename == ''):
+            with open(sla_emails_text, "a") as file:
+                file.write(
+                    "\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
+                    + row.b_llc_name + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
+                file.close()
+        else:
+            with open(sla_emails_text, "a") as file:
+                file.write(
+                    "\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
+                    + row.b_tradename + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
+                file.close()
+
+
 
 

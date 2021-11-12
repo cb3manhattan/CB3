@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.4.2
+#       jupytext_version: 1.12.0
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -358,6 +358,62 @@ agenda_table_reps = pd.merge(agenda_table, sla_tracking_df[['Rep Name', 'Busines
 agenda_table_reps
 
 # +
+
+# Function to output text for use in resolution letters and emails. 
+# This is a work in progress and the hope is to automate more of this production work over time. 
+
+
+def reso_text_output(filepath):
+    print("Hello. running the reso_text_output function and outputing to: ")
+
+    
+    # This outputs 1) an email subject, 2) address block
+    sla_emails_text = os.path.join(filepath, 'sla_email_text.txt')
+    print(sla_emails_text)
+    
+
+    
+    for index, row in agenda_table.iterrows():
+        if (row.b_tradename != '' and row.b_llc_name != ''):
+            with open(sla_emails_text, "a") as file:
+                file.write("\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address + "\n"
+                       "Re:    " + row.b_llc_name + "\n" + "       " + "d/b/a " + row.b_tradename + "\n" + "       " +
+                       row.prim_address + "\n" + "       " + "New York, NY" + "\n")
+                file.close() 
+        
+        else:
+            with open(sla_emails_text, "a") as file:
+                file.write("\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address +
+                       "\n" + "Re:    " + row.b_tradename + "\n" + "       " +  row.prim_address + "\n" + "       " + 
+                       "New York, NY" + "\n" )
+                file.close() 
+            
+    
+    # This outputs email text
+    
+    sla_emails_text = os.path.join(filepath, 'sla_email_text_admin_approvals.txt')
+    print(sla_emails_text)
+    
+    for index, row in agenda_table.iterrows():
+        if (row.b_tradename == ''):
+            with open(sla_emails_text, "a") as file:
+                file.write("\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
+                       + row.b_llc_name + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
+                file.close() 
+        else:
+            with open(sla_emails_text, "a") as file:
+                file.write("\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
+                           + row.b_tradename + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
+                file.close()
+    
+    
+# -
+
+reso_text_output(filepath)
+
+filepath
+
+# +
 # Create new text file for emails to sla:
 desktop = os.path.expanduser("~/Desktop")
 top_folder = 'SLA_AUTO_OUTPUT'
@@ -369,7 +425,9 @@ sla_emails_text = os.path.join(filepath, 'sla_email_text.txt')
 # This should be fixed in the future, but for now the work around is to identify rows where both columns have values
 # to identify where the 'b_tradename' column is truly a tradename. 
 
-for index, row in agenda_df.iterrows():
+# This outputs 1) an email subject, 2) address block
+
+for index, row in agenda_table.iterrows():
     if (row.b_tradename != '' and row.b_llc_name != ''):
         with open(sla_emails_text, "a") as file:
             file.write("\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address + "\n"
@@ -383,6 +441,8 @@ for index, row in agenda_df.iterrows():
                        "\n" + "Re:    " + row.b_tradename + "\n" + "       " +  row.prim_address + "\n" + "       " + 
                        "New York, NY" + "\n" )
             file.close() 
+            
+            
 # +
 # Create new text file for EMAILS for admin approvals to sla:
 desktop = os.path.expanduser("~/Desktop")
@@ -391,9 +451,15 @@ filepath = os.path.join(desktop,'Current Items','SLA_Agenda')
 
 sla_emails_text = os.path.join(filepath, 'sla_email_text_admin_approvals.txt')
 
-for index, row in agenda_df.iterrows():
+for index, row in agenda_table.iterrows():
+    if (row.b_tradename == ''):
         with open(sla_emails_text, "a") as file:
-            file.write("\n \n \n" + "CB 3 No Objection To (New Application, Municipal Expansion, Alteration, Corporation Change) with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
+            file.write("\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
+                       + row.b_llc_name + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
+            file.close() 
+    else:
+        with open(sla_emails_text, "a") as file:
+            file.write("\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
                        + row.b_tradename + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
             file.close() 
 
@@ -404,114 +470,8 @@ Nov_Path= r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\sla_app_type\sla_app_
 
 agenda_df = make_sla_folders(Nov_Path)
 
-# +
-agenda_df
-
-# Open the text file
-#r+ = read/write access mode
-agenda = open(Nov_Path, 'r+')
-    
-#Readlines creates a list, where each index contains a line of text, which in this case is a single establishment. 
-contents = agenda.readlines()
-
-# Close the text file
-agenda.close()
-
-print(contents)
-# -
-
-  # This creates a dataframe where each row is a line from the agenda pull
-agenda_df = pd.DataFrame(contents, columns=['line'])
-    
-    #Remove illegal character (apostrophe) from each string, and replace 'B'way' with 'Broadway'
-agenda_df = agenda_df.apply(lambda x: x.str.replace("B'way", "Broadway"))
-agenda_df = agenda_df.apply(lambda x: x.str.replace("'", ""))
-    
-    # This line creates new column that contains a bool series with 'True' for every line that starts with a a digit
-    # Lines that do not contain a digit (agenda number) will be removed.
-agenda_df['entry_row']= agenda_df['line'].str[0].str.isdigit()
-
-# +
-agenda_df
-
-
-# IDENTIFY SUBSTRINGS
-# df[df['A'].str.contains("hello")]
-
-
-# df.loc[(df.Event == 'Dance'),'Event']='Hip-Hop'
-
-agenda_df.loc[agenda_df.line.str.contains("Alterations"), 'line']='Alteration' 
-
-agenda_df.loc[agenda_df.line.str.contains("Items not heard at Committee"), 'line']='Item not heard at Committee' 
-
-agenda_df.loc[agenda_df.line.str.contains("	Expansion onto Municipal Property"), 'line']='Expansion onto Municipal Property' 
-
-
-
-
-# +
-# Iterate through every row. 
-# If line does not start with a digit, take 'line' value and assign it to every row until there is another row without a digit. 
-# see is_digit code above
-# might also 
-
-    # This line creates new column that contains a bool series with 'True' for every line that starts with a a digit
-    # Lines that do not contain a digit (agenda number) will be removed.
-   # agenda_df['entry_row']= agenda_df['line'].str[0].str.isdigit()
-
-#initialize app_type column to blank string
-agenda_df['app_type'] = ''
-
-for index, row in agenda_df.iterrows():
-    if row.line[0].isdigit() is False:
-        a_type = row.line
-        agenda_df.at[index, 'app_type'] = ''
-
-    else:
-        agenda_df.at[index, 'app_type'] = a_type
-        
-# Strip whitespace and newline characters from beginning and end of strings
-
-agenda_df['app_type'] = agenda_df['app_type'].str.strip()
-
-
-# -
-
-agenda_df
-
-
-
-# +
-def set_app_type(x):
-    
-    if x[0][0].isdigit() is False:
-        index_dict.update({x.name: x.line})
-        index_list.append(x.name)
-        app_type = x.line
-        print(app_type)
-#         print(index_dict)
-#         print("index list: " + str(index_list))
-        
-    else: 
-        print(app_type)
-        
-    
-    
-    
-    
-# -
-
-agenda_df["app_type"] = agenda_df.apply(lambda x: 'False' if x.line[0].isdigit() is False else 'True', axis=1)
-
-# +
-# new_df = df[df.apply(lambda x : bool_provider(x['Rev_M'],x['Year']),axis=1)]
-
-# +
-# Test pull changes from calvinbrown32 to cb3manhattan
-# -
-
-
+#
+# # Below code has been folded into other functions or is no longer used. Being kept for notes only. 
 
 # +
 # Pull Sample Agenda from personal github repo
@@ -544,3 +504,80 @@ def create_sla_dir():
     except Exception as e: print(e)
         
     return filepath;
+
+
+# +
+def set_app_type(x):
+    
+    if x[0][0].isdigit() is False:
+        index_dict.update({x.name: x.line})
+        index_list.append(x.name)
+        app_type = x.line
+        print(app_type)
+#         print(index_dict)
+#         print("index list: " + str(index_list))
+        
+    else: 
+        print(app_type)
+        
+    
+    
+    
+    
+
+# +
+# Iterate through every row. 
+# If line does not start with a digit, take 'line' value and assign it to every row until there is another row without a digit. 
+# see is_digit code above
+# might also 
+
+    # This line creates new column that contains a bool series with 'True' for every line that starts with a a digit
+    # Lines that do not contain a digit (agenda number) will be removed.
+   # agenda_df['entry_row']= agenda_df['line'].str[0].str.isdigit()
+
+#initialize app_type column to blank string
+agenda_df['app_type'] = ''
+
+for index, row in agenda_df.iterrows():
+    if row.line[0].isdigit() is False:
+        a_type = row.line
+        agenda_df.at[index, 'app_type'] = ''
+
+    else:
+        agenda_df.at[index, 'app_type'] = a_type
+        
+# Strip whitespace and newline characters from beginning and end of strings
+
+agenda_df['app_type'] = agenda_df['app_type'].str.strip()
+
+
+# +
+agenda_df
+
+
+# IDENTIFY SUBSTRINGS
+# df[df['A'].str.contains("hello")]
+
+
+# df.loc[(df.Event == 'Dance'),'Event']='Hip-Hop'
+
+agenda_df.loc[agenda_df.line.str.contains("Alterations"), 'line']='Alteration' 
+
+agenda_df.loc[agenda_df.line.str.contains("Items not heard at Committee"), 'line']='Item not heard at Committee' 
+
+agenda_df.loc[agenda_df.line.str.contains("	Expansion onto Municipal Property"), 'line']='Expansion onto Municipal Property' 
+
+
+# -
+
+
+  # This creates a dataframe where each row is a line from the agenda pull
+agenda_df = pd.DataFrame(contents, columns=['line'])
+    
+    #Remove illegal character (apostrophe) from each string, and replace 'B'way' with 'Broadway'
+agenda_df = agenda_df.apply(lambda x: x.str.replace("B'way", "Broadway"))
+agenda_df = agenda_df.apply(lambda x: x.str.replace("'", ""))
+    
+    # This line creates new column that contains a bool series with 'True' for every line that starts with a a digit
+    # Lines that do not contain a digit (agenda number) will be removed.
+agenda_df['entry_row']= agenda_df['line'].str[0].str.isdigit()
