@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="cf3eb99f-889d-456a-bade-381ce88c4446" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Automate_SLA.py" beforeDir="false" afterPath="$PROJECT_DIR$/Automate_SLA.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
