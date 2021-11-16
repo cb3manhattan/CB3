@@ -250,6 +250,41 @@ def create_sla_tracker(agenda_table, excel_filepath):
     return agenda_table;
 
 
+def stip_emails(excel_tracker, filepath, due_date):
+    """
+    This reads the excel tracker to a dataframe and outputs the Subject line, email address, and email body text for sending
+    out SLA Stips for siging.
+
+     Parameters
+        ----------
+        excel_tracker: excel file
+            This is the excel file that is used to track stip siging for each month
+
+        filepath: filepath
+            This is the filepath where the output text file will be generated.
+
+        due_date: string
+            This is a string that will be appended to the body text. Some examples are
+            "Friday, November 19th" or "4PM on Monday, July 27th"
+    """
+
+    sla_stip_emails = pd.read_excel(excel_tracker, sheet_name="SLA Tracking Sheet")
+
+    stip_email_text = os.path.join(filepath, 'stips_email_text.txt')
+
+    sla_stip_emails["first_name"] = sla_stip_emails["Rep Name"].str.split(" ").str[0]
+
+    for index, row in sla_stip_emails.iterrows():
+        with open(stip_email_text, "a") as file:
+            file.write(
+                "\n\n=====================\n" + "Stipulations for " + row.Address + "\n" + row.Email + "\n\nHello " + row.first_name +
+                ", \nAttached are the stipulations for your SLA application resulting from your meeting with the committee. Please have signed and return to us via email by " +
+                due_date + ".\n\nThank you,")
+        file.close()
+
+    return 0;
+
+
 def add_reps(agenda_table):
     """
     This function adds the representative names into the automated SLA dataframe.

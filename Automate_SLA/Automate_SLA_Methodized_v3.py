@@ -326,6 +326,45 @@ def create_sla_tracker(agenda_table, excel_filepath):
 
 create_sla_tracker(agenda_table, EXCEL_TEMPLATE)
 
+# +
+# SET EXCEL FILEPATH
+
+if sys.platform == "darwin":
+    #On Mac
+    EXCEL_TRACKER = r"/Users/calvindechicago/Desktop/Community Board 3/SLA/SLA_tracker_template.xlsx"
+
+elif sys.platform == "win32" or sys.platform == "win64":
+    #On PC
+    EXCEL_TRACKER = r"C:\Users\MN03\Desktop\Current Items\SLA_Agenda\SLA_Tracker_Nov.xlsx"
+# -
+
+EXCEL_TRACKER
+
+
+def stip_emails(excel_tracker, filepath, due_date):
+    sla_stip_emails = pd.read_excel(EXCEL_TRACKER, sheet_name = "SLA Tracking Sheet")
+    
+    stip_email_text = os.path.join(filepath, 'stips_email_text.txt')
+    
+    sla_stip_emails["first_name"] = sla_stip_emails["Rep Name"].str.split(" ").str[0]
+    
+    for index, row in sla_stip_emails.iterrows():
+        with open(stip_email_text, "a") as file:
+              file.write("\n" + "\n" + "\n" + "Stipulations for " + row.Address + "\n" + row.Email + "\n\nHello " + row.first_name +
+              ", \nAttached are the stipulations for your SLA application resulting from your meeting with the committee. Please have signed and return to us via email by " +
+              due_date + ".\n\nThank you,")
+        file.close() 
+
+
+
+    return 0;
+
+stip_emails = stip_emails(EXCEL_TRACKER, filepath, due_date = "Friday, November 19")
+
+stip_emails
+
+stip_emails["Rep Name"].str.split(" ").str[0]
+
 
 # +
 def add_reps(agenda_table):
