@@ -233,8 +233,9 @@ def create_sla_tracker(agenda_table, excel_filepath):
     """
 
     # Create clean version for input into tracker
-    tracker_df = agenda_table.loc[agenda_table['app_type']
-                                  == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
+    tracker_df = agenda_table.loc[(agenda_table['app_type']
+                                   == 'New Liquor License Applications') | (agenda_table['app_type'] == 'Alteration'), [
+                                      'agenda_number', 'b_name', 'prim_address']]
 
     # Append Tracker dataframe to SLA Tracker. This creates a separate sheet that
     # can be cut and paste into main tracker sheet

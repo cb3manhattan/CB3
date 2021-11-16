@@ -303,9 +303,10 @@ def create_sla_tracker(agenda_table, excel_filepath):
     
     """
     
-    # Create clean version for input into tracker 
-    tracker_df = agenda_table.loc[agenda_table['app_type'] 
-                              == 'New Liquor License Applications', ['agenda_number', 'b_name', 'prim_address']]
+  # Create clean version for input into tracker
+    tracker_df = agenda_table.loc[(agenda_table['app_type']
+                                   == 'New Liquor License Applications') | (agenda_table['app_type'] == 'Alteration'), [
+                                      'agenda_number', 'b_name', 'prim_address']]
     
     # Append Tracker dataframe to SLA Tracker. This creates a separate sheet that 
     # can be cut and paste into main tracker sheet
@@ -405,8 +406,8 @@ def reso_text_output(filepath):
                 file.write("\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
                            + row.b_tradename + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
                 file.close()
-    
-    
+
+
 # -
 
 reso_text_output(filepath)
@@ -441,8 +442,8 @@ for index, row in agenda_table.iterrows():
                        "\n" + "Re:    " + row.b_tradename + "\n" + "       " +  row.prim_address + "\n" + "       " + 
                        "New York, NY" + "\n" )
             file.close() 
-            
-            
+
+
 # +
 # Create new text file for EMAILS for admin approvals to sla:
 desktop = os.path.expanduser("~/Desktop")
@@ -523,7 +524,7 @@ def set_app_type(x):
     
     
     
-    
+
 
 # +
 # Iterate through every row. 
