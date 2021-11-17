@@ -25,6 +25,17 @@ TO DO
     Create script that inputs area code based on address. Another option is to add this to the tracker and then pull from the tracker and add to the main dataframe.
     Other info from agenda might be useful: License type, app type (method of operation change, etc)
 
+Instructions to create SLA Agenda Text File:
+
+- Copy and paste text from CB 3 Agenda on website. Only copy lines of the agenda that either include application types.
+Or application information. Each of the agenda items will be on a separate line, which is important for the parsing scripts
+to function properly.
+
+CB3 Agenda Website: https://www1.nyc.gov/site/manhattancb3/calendar/calendar.page
+
+
+
+
 LIST OF FUNCTIONS and Arguments:
 
 make_sla_dataframe(agenda)
@@ -32,6 +43,7 @@ make_sla_folders(agenda_table, filepath)
 create_sla_tracker(agenda_table, excel_filepath)
 add_reps(agenda_table)
 reso_text_output(filepath)
+
 
 """
 
