@@ -495,7 +495,7 @@ for index, row in agenda_table.iterrows():
     if (row.b_tradename == ''):
         with open(sla_emails_text, "a") as file:
             file.write("\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
-                       + row.b_llc_name + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
+                       + row.b_llc_name + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.\n \n Please contact the Community Board office with any questions.\n \nThank you,""")
             file.close() 
     else:
         with open(sla_emails_text, "a") as file:
