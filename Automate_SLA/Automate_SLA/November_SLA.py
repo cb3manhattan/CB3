@@ -31,15 +31,15 @@ else:
 #=======================================================
 agenda_table = make_sla_dataframe(agenda)
 #=======================================================
-make_sla_folders(agenda_table, filepath)
+# make_sla_folders(agenda_table, filepath)
 #=======================================================
-create_sla_tracker(agenda_table, EXCEL_TEMPLATE)
+# create_sla_tracker(agenda_table, EXCEL_TEMPLATE)
 #=======================================================
 
 
 #=======================================================
-due_date = "Friday, November 19"
-stip_emails(EXCEL_TRACKER, filepath, due_date="Friday, November 19")
+# due_date = "Friday, November 19"
+# stip_emails(EXCEL_TRACKER, filepath, due_date="Friday, November 19")
 #=======================================================
 reso_text_output(agenda_table, filepath)
 #=======================================================

@@ -424,7 +424,7 @@ def reso_text_output(filepath):
         else:
             with open(sla_emails_text, "a") as file:
                 file.write("\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address +
-                       "\n" + "Re:    " + row.b_tradename + "\n" + "       " +  row.prim_address + "\n" + "       " + 
+                       "\n" + "Re:    " + row.b_llc_name + "\n" + "       " +  row.prim_address + "\n" + "       " +
                        "New York, NY" + "\n" )
                 file.close() 
             
@@ -478,7 +478,7 @@ for index, row in agenda_table.iterrows():
     else:
         with open(sla_emails_text, "a") as file:
             file.write("\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address +
-                       "\n" + "Re:    " + row.b_tradename + "\n" + "       " +  row.prim_address + "\n" + "       " + 
+                       "\n" + "Re:    " + row.b_llc_name + "\n" + "       " +  row.prim_address + "\n" + "       " +
                        "New York, NY" + "\n" )
             file.close() 
 

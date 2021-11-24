@@ -342,15 +342,15 @@ def reso_text_output(agenda_table, filepath):
             with open(sla_emails_text, "a") as file:
                 file.write(
                     "\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address + "\n"
-                                                                                                              "Re:    " + row.b_llc_name + "\n" + "       " + "d/b/a " + row.b_tradename + "\n" + "       " +
-                    row.prim_address + "\n" + "       " + "New York, NY" + "\n")
+                                                          "Re:     " + row.b_llc_name + "\n" + "        " + "d/b/a" + row.b_tradename + "\n" + "       " +
+                    row.prim_address + "\n" + "       " + " New York, NY" + "\n")
                 file.close()
 
         else:
             with open(sla_emails_text, "a") as file:
                 file.write("\n" + "\n" + "\n" + "CB3 Resolution re: " + row.b_tradename + " - " + row.prim_address +
-                           "\n" + "Re:    " + row.b_tradename + "\n" + "       " + row.prim_address + "\n" + "       " +
-                           "New York, NY" + "\n")
+                           "\n" + "Re:   " + row.b_llc_name + "\n" + "       " + row.prim_address + "\n" + "     " +
+                           "   New York, NY" + "\n")
                 file.close()
 
                 # This outputs email text
