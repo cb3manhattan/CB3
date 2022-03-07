@@ -251,7 +251,7 @@ def create_sla_tracker(agenda_table, excel_filepath):
 
     # Append Tracker dataframe to SLA Tracker. This creates a separate sheet that
     # can be cut and paste into main tracker sheet
-
+    print("Creating SLA TRACKER **********")
     with pd.ExcelWriter(excel_filepath, engine='openpyxl', mode='a', if_sheet_exists='new') as writer:
         tracker_df.to_excel(writer, sheet_name='Automated_Output')
         # writer.save()
@@ -266,6 +266,8 @@ def stip_emails(excel_tracker, filepath, due_date):
     """
     This reads the excel tracker to a dataframe and outputs the Subject line, email address, and email body text for sending
     out SLA Stips for siging.
+
+    *** If there is a missing value in the tracking sheet (missing rep name, missing address etc, this code will not function)
 
      Parameters
         ----------
@@ -287,39 +289,24 @@ def stip_emails(excel_tracker, filepath, due_date):
     sla_stip_emails["first_name"] = sla_stip_emails["Rep Name"].str.split(" ").str[0]
 
     for index, row in sla_stip_emails.iterrows():
+        # print("type due_date: ")
+        # print(type(due_date))
+        # print(type(row.Address))
+        # print(type(row.Email))
+        # print(type(row.first_name))
+        # print("due date: " + due_date)
         with open(stip_email_text, "a") as file:
             file.write(
                 "\n\n=====================\n" + "Stipulations for " + row.Address + "\n" + row.Email + "\n\nHello " + row.first_name +
-                ", \nAttached are the stipulations for your SLA application resulting from your meeting with the committee. Please have signed and return to us via email by " +
-                due_date + ".\n\nThank you,")
+                ", \nAttached are the stipulations for your SLA application resulting from your meeting with the committee. Please have signed and return to us via email by "
+                + due_date + ".\n\nThank you,")
         file.close()
 
     return 0;
 
 
-def add_reps(agenda_table):
-    """
-    This function adds the representative names into the automated SLA dataframe.
-    Reps are added manually into the tracking form. Once this has been completed, this function takes the rec names in the excel file and merges
-    them in the main automated dataframe created by the make_sla_dataframe function.
-
-    param: agenda_table - this is the automated dataframe produced from the make_sla_datafrme
-
-    """
-
-    # Read in excel to get representatives
-    sla_tracking_df = pd.read_excel(EXCEL_TEMPLATE, sheet_name="SLA Tracking Sheet")
-    agenda_table = pd.merge(agenda_table, sla_tracking_df[['Rep Name', 'Business Name']], left_on='b_name',
-                            right_on='Business Name', how='left')
-    print("returning sla agenda dataframe with representative names added")
-
-    return agenda_table;
-
-
 # Function to output text for use in resolution letters and emails.
 # This is a work in progress and the hope is to automate more of this production work over time.
-
-
 def reso_text_output(agenda_table, filepath):
 
     """
@@ -371,6 +358,25 @@ def reso_text_output(agenda_table, filepath):
                     "\n \n \n" + "CB 3 No Objection To " + row.app_type + " with stipulations, stipulations attached – " + row.prim_address + "\n \n" + """Please see the attached letter from CB 3 Manhattan stating no objection to the wine, beer,and cider application for """
                     + row.b_tradename + " located at " + row.prim_address + """, so long as the attached stipulations are included in the license agreement.""")
                 file.close()
+
+# This code is having issues.
+def add_reps(agenda_table, excel_tracker):
+    """
+    This function adds the representative names into the automated SLA dataframe.
+    Reps are added manually into the tracking form. Once this has been completed, this function takes the rec names in the excel file and merges
+    them in the main automated dataframe created by the make_sla_dataframe function.
+
+    param: agenda_table - this is the automated dataframe produced from the make_sla_datafrme
+
+    """
+
+    # Read in excel to get representatives
+    sla_tracking_df = pd.read_excel(excel_tracker, sheet_name="SLA Tracking Sheet")
+    agenda_table = pd.merge(agenda_table, sla_tracking_df[['Rep Name', 'Business Name']], left_on='b_name',
+                            right_on='Business Name', how='left')
+    print("returning sla agenda dataframe with representative names added")
+
+    return agenda_table;
 
 
 
